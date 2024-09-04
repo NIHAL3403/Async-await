@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Callbacks Example</title>
+    <style>
+        /* General Styling */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to right, #ff7e5f, #feb47b);
+            color: #fff;
+            text-align: center;
+            padding: 50px;
+        }
+        button {
+            padding: 12px 24px;
+            font-size: 18px;
+            color: #fff;
+            background-color: #ff7e5f;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        button:hover {
+            transform: scale(1.1);
+            background-color: #feb47b;
+        }
+        #output {
+            margin-top: 30px;
+            padding: 20px;
+            font-size: 20px;
+            color: #333;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            opacity: 0;
+            transition: opacity 1s ease, transform 0.5s ease;
+            transform: scale(0.8);
+        }
+        #output.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+    </style>
+</head>
+<body>
+    <!-- Button to trigger the callback function -->
+    <button id="callbackButton">Click Me</button>
+    <!-- Div to display the output after the callback is executed -->
+    <div id="output"></div>
+
+    <script>
+        function fetchData(callback) {
+            setTimeout(() => {
+                const url = 'https://dummyjson.com/posts';
+                fetch(url)
+                    .then(response => response.json())
+                    .then(data => callback(data.posts))
+                    .catch(error => callback(`Error: ${error}`));
+            }, 5000);
+        }
+
+        document.getElementById('callbackButton').addEventListener('click', () => {
+            fetchData((result) => {
+                const outputDiv = document.getElementById('output');
+                if (typeof result === 'string') {
+                    outputDiv.innerText = result;
+                } else {
+                    const postTitles = result.map(post => post.title).join('\n');
+                    outputDiv.innerText = `Callback executed after 5 seconds:\n${postTitles}`;
+                }
+                outputDiv.classList.add('visible'); // Fade-in and scale-up effect
+            });
+        });
+    </script>
+</body>
+</html>

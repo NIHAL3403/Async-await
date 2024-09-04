@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Async/Await Example</title>
+    <style>
+        /* General Styling */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to right, #ff512f, #dd2476);
+            color: #fff;
+            text-align: center;
+            padding: 50px;
+        }
+        button {
+            padding: 12px 24px;
+            font-size: 18px;
+            color: #fff;
+            background-color: #ff512f;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        button:hover {
+            transform: scale(1.1);
+            background-color: #dd2476;
+        }
+        #output {
+            margin-top: 30px;
+            padding: 20px;
+            font-size: 20px;
+            color: #333;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            opacity: 0;
+            transition: opacity 1s ease, transform 0.5s ease;
+            transform: scale(0.8);
+        }
+        #output.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+    </style>
+</head>
+<body>
+    <!-- Button to trigger the async/await function -->
+    <button id="asyncButton">Click Me</button>
+    <!-- Div to display the output during and after the async/await execution -->
+    <div id="output">Loading...</div>
+
+    <script>
+        async function fetchDataAsync() {
+            const url = 'https://dummyjson.com/posts';
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                return data.posts;
+            } catch (error) {
+                throw `Error: ${error}`;
+            }
+        }
+
+        document.getElementById('asyncButton').addEventListener('click', async () => {
+            const outputDiv = document.getElementById('output');
+            outputDiv.innerText = 'Loading...';
+            outputDiv.classList.remove('visible'); // Hide output before new data loads
+
+            try {
+                const posts = await fetchDataAsync();
+                const postTitles = posts.map(post => post.title).join('\n');
+                outputDiv.innerText = `Async/Await resolved:\n${postTitles}`;
+                outputDiv.classList.add('visible'); // Fade-in and scale-up effect
+            } catch (error) {
+                outputDiv.innerText = error;
+                outputDiv.classList.add('visible'); // Fade-in and scale-up effect
+            }
+        });
+    </script>
+</body>
+</html>
